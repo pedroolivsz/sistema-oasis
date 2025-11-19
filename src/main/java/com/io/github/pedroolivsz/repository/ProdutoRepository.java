@@ -7,13 +7,13 @@ import java.util.Optional;
 
 import com.io.github.pedroolivsz.config.Database;
 import com.io.github.pedroolivsz.dominio.Produto;
+import com.io.github.pedroolivsz.logs.LogDatabase;
 import com.io.github.pedroolivsz.rowMapper.ProdutoRowMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ProdutoRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(ProdutoRepository.class);
+
+    private final LogDatabase logger = new LogDatabase(ProdutoRepository.class);
 
     private final ProdutoRowMapper produtoRowMapper = new ProdutoRowMapper();
 
@@ -40,7 +40,7 @@ public class ProdutoRepository {
             }
 
         } catch(SQLException sqlException) {
-            log.error("Erro ao criar produto no banco. SQL: {} | Produto: {}", INSERT, produto, sqlException);
+            logger.logDatabaseError("Criar produto no banco", INSERT, produto, sqlException);
             throw new RepositoryException("Erro ao criar o produto. Tente novamente mais tarde");
         }
 
@@ -55,25 +55,33 @@ public class ProdutoRepository {
             preparedStatement.setString(2, produto.getNome());
             preparedStatement.setBigDecimal(3, produto.getValorUnitario());
             preparedStatement.setInt(4, produto.getId());
-            preparedStatement.executeUpdate();
+            int rows = preparedStatement.executeUpdate();
+
+            if(rows == 0) {
+                throw new RepositoryException("Produto não encontrado para atualização.");
+            }
 
         } catch (SQLException sqlException) {
-            log.error("Erro ao editar produto no banco de dados. SQL: {} | Produto: {}", UPDATE, produto, sqlException);
+            logger.logDatabaseError("Editar produto no banco de dados", UPDATE, produto, sqlException);
             throw new RepositoryException("Erro ao editar produto. Tente novamente mais tarde");
         }
 
     }
 
-    public void remove(int id) {
+    public void delete(int id) {
 
         try(Connection conn = Database.connect();
         PreparedStatement preparedStatement = conn.prepareStatement(DELETE)) {
 
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            int rows = preparedStatement.executeUpdate();
+
+            if(rows == 0) {
+                throw new RepositoryException("Produto não encontrado para remoção.");
+            }
 
         } catch (SQLException sqlException) {
-            log.error("Erro ao remover o produto do banco de dados. SQL: {} | Id informado: {}", DELETE, id, sqlException);
+            logger.logDatabaseError("Remover o produto do banco de dados", DELETE, id, sqlException);
             throw new RepositoryException("Erro ao deletar o produto. Tente novamente mais tarde.");
         }
 
@@ -91,11 +99,12 @@ public class ProdutoRepository {
                 produtos.add(produtoRowMapper.map(resultSet));
             }
 
-            return produtos;
         } catch (SQLException sqlException) {
-            log.error("Erro ao listar os produtos do banco de dados. SQL: {}", LIST_ALL, sqlException);
-            throw new RepositoryException("Erro ao listar produtos.");
+            logger.logDatabaseError("Listar os produtos do banco de dados", LIST_ALL, sqlException);
+            throw new RepositoryException("Erro ao listar produtos. Tente novamente mais tarde.");
         }
+
+        return produtos;
 
     }
 
@@ -113,8 +122,8 @@ public class ProdutoRepository {
             }
 
         } catch (SQLException sqlException) {
-            log.error("Erro ao procurar o produto por id no banco. SQL: {} | Id informado: {}", FIND_BY_ID, id, sqlException);
-            throw new RepositoryException("Erro ao buscar o produto.");
+            logger.logDatabaseError("Procurar o produto por id no banco", FIND_BY_ID, id, sqlException);
+            throw new RepositoryException("Erro ao buscar o produto. Tente novamente mais tarde.");
         }
 
         return Optional.empty();

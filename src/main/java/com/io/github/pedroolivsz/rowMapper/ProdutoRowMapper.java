@@ -6,8 +6,9 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProdutoRowMapper {
+public class ProdutoRowMapper implements RowMapper<Produto>{
 
+    @Override
     public Produto map(ResultSet resultSet) throws SQLException {
 
         Produto produto = new Produto();

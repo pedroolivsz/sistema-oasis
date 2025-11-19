@@ -24,7 +24,7 @@ public class TesteProdutoRepository {
         produtoRepository.create(produtoTest);*/
 
         /*int id = Integer.parseInt(JOptionPane.showInputDialog("id: "));
-        produtoRepository.remove(id);*/
+        produtoRepository.delete(id);*/
 
         /*List<Produto> produtos = produtoRepository.listAll();
 
