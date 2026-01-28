@@ -1,7 +1,7 @@
 package com.io.github.pedroolivsz.viewfx;
 
 import com.io.github.pedroolivsz.controller.ProdutoController;
-import com.io.github.pedroolivsz.dominio.Produto;
+import com.io.github.pedroolivsz.dominio.Product;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductListView {
     private final ProdutoController produtoController;
     private final BorderPane root;
-    private final TableView<Produto> tabela;
+    private final TableView<Product> tabela;
 
     public ProductListView(ProdutoController produtoController) {
         this.produtoController = produtoController;
@@ -30,24 +30,24 @@ public class ProductListView {
     }
 
     private void setupTable() {
-        TableColumn<Produto, Integer> colunaId = new TableColumn<>("ID");
+        TableColumn<Product, Integer> colunaId = new TableColumn<>("ID");
         colunaId.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getId()).asObject());
         colunaId.setPrefWidth(50);
 
-        TableColumn<Produto, String> colunaNome = new TableColumn<>("Nome");
-        colunaNome.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getNome()));
+        TableColumn<Product, String> colunaNome = new TableColumn<>("Nome");
+        colunaNome.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getName()));
         colunaNome.setPrefWidth(200);
 
-        TableColumn<Produto, Integer> colunaQuantidade = new TableColumn<>("Quantidade");
-        colunaQuantidade.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getQuantidade()).asObject());
+        TableColumn<Product, Integer> colunaQuantidade = new TableColumn<>("Quantidade");
+        colunaQuantidade.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getQuantity()).asObject());
         colunaQuantidade.setPrefWidth(120);
 
         tabela.getColumns().addAll(colunaId, colunaNome, colunaQuantidade);
     }
 
     private void loadData() {
-        List<Produto> produtos = produtoController.listAll();
-        tabela.setItems(FXCollections.observableList(produtos));
+        List<Product> products = produtoController.listAll();
+        tabela.setItems(FXCollections.observableList(products));
     }
 
     public Parent getRoot() {

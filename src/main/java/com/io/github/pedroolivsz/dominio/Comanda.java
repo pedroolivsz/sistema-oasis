@@ -8,13 +8,13 @@ public class Comanda {
 
     private int id;
     private int numeroMesa;
-    private List<Produto> produtos;
+    private List<Product> products;
     private BigDecimal valorTotal;
 
     public Comanda(int id, int numeroMesa, BigDecimal valorTotal) {
         this.id = id;
         this.numeroMesa = numeroMesa;
-        this.produtos = new ArrayList<>();
+        this.products = new ArrayList<>();
         this.valorTotal = valorTotal;
     }
 
@@ -29,12 +29,12 @@ public class Comanda {
         this.numeroMesa = numeroMesa;
     }
 
-    public List<Produto> getProdutos() {
-        return produtos;
+    public List<Product> getProdutos() {
+        return products;
     }
 
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
+    public void setProdutos(List<Product> products) {
+        this.products = products;
     }
 
     public BigDecimal getValorTotal() {

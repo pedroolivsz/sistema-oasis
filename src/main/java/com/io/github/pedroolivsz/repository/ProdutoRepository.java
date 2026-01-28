@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.io.github.pedroolivsz.config.Database;
-import com.io.github.pedroolivsz.dominio.Produto;
+import com.io.github.pedroolivsz.dominio.Product;
 import com.io.github.pedroolivsz.logs.LogDatabase;
 import com.io.github.pedroolivsz.rowMapper.ProdutoRowMapper;
+
+/**
+ * Repsitory responsável pelas operações de percistência de produtos.
+ *
+ */
 
 public class ProdutoRepository {
 
@@ -23,53 +28,50 @@ public class ProdutoRepository {
     private static final String LIST_ALL = "SELECT id, quantidade, nome, valor_unitario FROM produtos ORDER BY id";
     private static final String FIND_BY_ID = "SELECT id, quantidade, nome, valor_unitario FROM produtos WHERE id = ?";
 
-    public void create(Produto produto) {
-
+    public Product create(Product product) {
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
 
-            preparedStatement.setInt(1, produto.getQuantidade());
-            preparedStatement.setString(2, produto.getNome().toLowerCase());
-            preparedStatement.setBigDecimal(3, produto.getValorUnitario());
+            preparedStatement.setInt(1, product.getQuantity());
+            preparedStatement.setString(2, product.getName().toLowerCase());
+            preparedStatement.setBigDecimal(3, product.getUnitValue());
             preparedStatement.executeUpdate();
 
             try (ResultSet keys = preparedStatement.getGeneratedKeys()){
                 if(keys.next()) {
-                    produto.setId(keys.getInt(1));
+                    product.setId(keys.getInt(1));
                 }
             }
-
         } catch(SQLException sqlException) {
-            logger.logDatabaseError("Criar produto no banco", INSERT, produto, sqlException);
+            logger.logDatabaseError("Criar produto no banco", INSERT, product, sqlException);
             throw new RepositoryException("Erro ao criar o produto. Tente novamente mais tarde");
         }
 
+        return product;
     }
 
-    public void update(Produto produto) {
-
+    public Product update(Product product) {
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(UPDATE)) {
 
-            preparedStatement.setInt(1, produto.getQuantidade());
-            preparedStatement.setString(2, produto.getNome());
-            preparedStatement.setBigDecimal(3, produto.getValorUnitario());
-            preparedStatement.setInt(4, produto.getId());
+            preparedStatement.setInt(1, product.getQuantity());
+            preparedStatement.setString(2, product.getName());
+            preparedStatement.setBigDecimal(3, product.getUnitValue());
+            preparedStatement.setInt(4, product.getId());
             int rows = preparedStatement.executeUpdate();
 
             if(rows == 0) {
                 throw new RepositoryException("Produto não encontrado para atualização.");
             }
-
         } catch (SQLException sqlException) {
-            logger.logDatabaseError("Editar produto no banco de dados", UPDATE, produto, sqlException);
+            logger.logDatabaseError("Editar produto no banco de dados", UPDATE, product, sqlException);
             throw new RepositoryException("Erro ao editar produto. Tente novamente mais tarde");
         }
 
+        return product;
     }
 
     public void delete(int id) {
-
         try(Connection conn = Database.connect();
         PreparedStatement preparedStatement = conn.prepareStatement(DELETE)) {
 
@@ -82,34 +84,28 @@ public class ProdutoRepository {
         } catch (SQLException sqlException) {
             logger.logDatabaseError("Remover o produto do banco de dados", DELETE, id, sqlException);
             throw new RepositoryException("Erro ao deletar o produto. Tente novamente mais tarde.");
-
         }
-
     }
 
-    public List<Produto> listAll() {
-
-        List<Produto> produtos = new ArrayList<>();
+    public List<Product> listAll() {
+        List<Product> products = new ArrayList<>();
 
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(LIST_ALL);
             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while(resultSet.next()) {
-                produtos.add(produtoRowMapper.map(resultSet));
+                products.add(produtoRowMapper.map(resultSet));
             }
-
         } catch (SQLException sqlException) {
             logger.logDatabaseError("Listar os produtos do banco de dados", LIST_ALL, sqlException);
             throw new RepositoryException("Erro ao listar produtos. Tente novamente mais tarde.");
         }
 
-        return produtos;
-
+        return products;
     }
 
-    public Optional<Produto> findById(int id) {
-
+    public Optional<Product> findById(int id) {
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_BY_ID)) {
 
@@ -120,14 +116,11 @@ public class ProdutoRepository {
                     return Optional.of(produtoRowMapper.map(resultSet));
                 }
             }
-
         } catch (SQLException sqlException) {
             logger.logDatabaseError("Procurar o produto por id no banco", FIND_BY_ID, id, sqlException);
             throw new RepositoryException("Erro ao buscar o produto. Tente novamente mais tarde.");
         }
 
         return Optional.empty();
-
     }
-
 }

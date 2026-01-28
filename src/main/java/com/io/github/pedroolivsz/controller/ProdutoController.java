@@ -1,35 +1,35 @@
 package com.io.github.pedroolivsz.controller;
 
-import com.io.github.pedroolivsz.dominio.Produto;
-import com.io.github.pedroolivsz.service.ProdutoService;
+import com.io.github.pedroolivsz.dominio.Product;
+import com.io.github.pedroolivsz.service.ProductService;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ProdutoController {
-    private final ProdutoService produtoService;
+    private final ProductService productService;
 
-    public ProdutoController(ProdutoService produtoService) {
-        this.produtoService = produtoService;
+    public ProdutoController(ProductService productService) {
+        this.productService = productService;
     }
 
-    public void create(String nome, int quantidade, BigDecimal valorUnitario) {
-        produtoService.create(nome, quantidade, valorUnitario);
+    public Product create(String nome, int quantidade, BigDecimal valorUnitario) {
+        return productService.create(nome, quantidade, valorUnitario);
     }
 
-    public void update(int id, String nome, int quantidade, BigDecimal valorUnitario) {
-        produtoService.update(id, nome, quantidade, valorUnitario);
+    public Product update(int id, String nome, int quantidade, BigDecimal valorUnitario) {
+        return productService.update(id, nome, quantidade, valorUnitario);
     }
 
     public void delete(int id) {
-        produtoService.delete(id);
+        productService.delete(id);
     }
 
-    public List<Produto> listAll() {
-        return produtoService.listAll();
+    public List<Product> listAll() {
+        return productService.listAll();
     }
 
-    public Produto findbyId(int id) {
-        return produtoService.findById(id);
+    public Product findbyId(int id) {
+        return productService.findById(id);
     }
 }

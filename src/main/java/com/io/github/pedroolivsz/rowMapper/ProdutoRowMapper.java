@@ -1,24 +1,24 @@
 package com.io.github.pedroolivsz.rowMapper;
 
-import com.io.github.pedroolivsz.dominio.Produto;
+import com.io.github.pedroolivsz.dominio.Product;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProdutoRowMapper implements RowMapper<Produto>{
+public class ProdutoRowMapper implements RowMapper<Product>{
 
     @Override
-    public Produto map(ResultSet resultSet) throws SQLException {
+    public Product map(ResultSet resultSet) throws SQLException {
 
-        Produto produto = new Produto();
-        produto.setId(resultSet.getInt("id"));
-        produto.setQuantidade(resultSet.getInt("quantidade"));
-        produto.setNome(resultSet.getString("nome"));
+        Product product = new Product();
+        product.setId(resultSet.getInt("id"));
+        product.setQuantity(resultSet.getInt("quantidade"));
+        product.setName(resultSet.getString("nome"));
         BigDecimal valor = resultSet.getBigDecimal("valor_unitario");
-        produto.setValorUnitario(valor != null ? valor : BigDecimal.ZERO);
+        product.setUnitValue(valor != null ? valor : BigDecimal.ZERO);
 
-        return produto;
+        return product;
 
     }
 }
