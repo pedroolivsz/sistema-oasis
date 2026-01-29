@@ -235,4 +235,11 @@ public class ProdutoRepository {
         preparedStatement.setString(2, product.getName());
         preparedStatement.setBigDecimal(3, product.getUnitValue());
     }
+
+    private void validateProduct(Product product) {
+        if(product == null) throw new IllegalArgumentException("Produto não pode ser nulo");
+        if(product.getName() == null || product.getName().trim().isEmpty()) throw new IllegalArgumentException("Nome do produto não pode ser nulo ou vazio");
+        if(product.getQuantity() < 0) throw new IllegalArgumentException("Quantidade não pode ser nergativa");
+        if(product.getUnitValue() == null || product.getUnitValue().signum() < 0) throw new IllegalArgumentException("Valor unitário deve ser não-nulo e não-negativo");
+    }
 }
