@@ -15,11 +15,6 @@ public class ProdutoRepository {
 
     //=============== Constantes ===============
 
-    //Configurações
-    private static final int DEFAULT_SIZE_PAGE = 20;
-    private static final int MAX_BATCH_SIZE = 1000;
-    private static final int QUERY_TIMEOUT_SECONDS = 30;
-
     //Mensagens de erro padronizadas
     private static final String ERROR_CREATE = "Erro ao criar produto";
     private static final String ERROR_UPDATE = "Erro ao atualizar produto";
@@ -39,17 +34,6 @@ public class ProdutoRepository {
             "SELECT id, quantidade, nome, valor_unitario FROM produtos ORDER BY id";
     private static final String FIND_BY_ID =
             "SELECT id, quantidade, nome, valor_unitario FROM produtos WHERE id = ?";
-    private static final String EXISTS_BY_NAME =
-            "SELECT COUNT(*) FROM produtos WHERE LOWER(nome) = ?";
-    private static final String COUNT_ALL =
-            "SELECT COUNT(*) FROM produtos";
-    private static final String STATISTICS =
-            "SELECT COUNT(*) as total, " +
-            "COALESCE(SUM(quantidade), 0) as total_quantidade, " +
-            "COALESCE(AVG(valor_unitario), 0) as preco_medio, " +
-            "COALESCE(MIN(valor_unitario), 0) as preco_minimo, " +
-            "COALESCE(MAX(valor_unitario), 0) as preco_maximo" +
-            "FROM produtos";
 
     //=============== Dependências ===============
 
