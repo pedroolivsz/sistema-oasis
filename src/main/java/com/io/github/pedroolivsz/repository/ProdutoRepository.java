@@ -214,6 +214,8 @@ public class ProdutoRepository {
     }
 
     public Optional<Product> findById(int id) {
+        validateId(id);
+
         try(Connection conn = Database.connect();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_BY_ID)) {
 
@@ -221,14 +223,17 @@ public class ProdutoRepository {
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if(resultSet.next()) {
-                    return Optional.of(produtoRowMapper.map(resultSet));
+                    Product product = produtoRowMapper.map(resultSet);
+                    logger.info("Produto encontrado. ID: " + product.getId());
+                    return Optional.of(product);
                 }
             }
         } catch (SQLException sqlException) {
             logger.logDatabaseError("Procurar o produto por id no banco", FIND_BY_ID, id, sqlException);
-            throw new RepositoryException("Erro ao buscar o produto. Tente novamente mais tarde.");
+            throw new RepositoryException(ERROR_FIND + ". Tente novamente mais tarde.");
         }
 
+        logger.info("Produto não encontrado. ID: " + id);
         return Optional.empty();
     }
 
