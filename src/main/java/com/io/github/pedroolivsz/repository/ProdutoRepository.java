@@ -176,6 +176,8 @@ public class ProdutoRepository {
     }
 
     public void delete(int id) {
+        validateId(id);
+
         try(Connection conn = Database.connect();
         PreparedStatement preparedStatement = conn.prepareStatement(DELETE)) {
 
@@ -183,11 +185,11 @@ public class ProdutoRepository {
             int rows = preparedStatement.executeUpdate();
 
             if(rows == 0) {
-                throw new RepositoryException("Produto não encontrado para remoção.");
+                throw new RepositoryException(ERROR_NOT_FOUND + " para remoção. ID: " + id);
             }
         } catch (SQLException sqlException) {
             logger.logDatabaseError("Remover o produto do banco de dados", DELETE, id, sqlException);
-            throw new RepositoryException("Erro ao deletar o produto. Tente novamente mais tarde.");
+            throw new RepositoryException(ERROR_DELETE + ". Tente novamente mais tarde.", sqlException);
         }
     }
 
