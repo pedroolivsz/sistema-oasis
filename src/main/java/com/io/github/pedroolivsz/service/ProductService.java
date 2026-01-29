@@ -10,6 +10,23 @@ import com.io.github.pedroolivsz.validation.ProductValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Service responsável pela lógica de negocio de produto.
+ *
+ * <p>Esta classe atua como intermediaria entre controller e repository,
+ * implementando regras de negócio, validações e tratamento de exceções</p>
+ *
+ * <p>Características principais</p>
+ * <ul>
+ *     <li>Validação completa de regra de negócio</li>
+ *     <li>Logging detalhado de operações</li>
+ *     <li>Tratamento centralizado de exceções</li>
+ *     <li>Encapsulamento da lógica de domínio</li>
+ * </ul>
+ *
+ * @author João Pedro
+ */
+
 public class ProductService {
 
     public static final Logger logger = LoggerFactory.getLogger(ProductService.class);
