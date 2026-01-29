@@ -61,7 +61,7 @@ public class ProductService {
             Product product = new Product(name, quantity, unitValue);
             ProductValidator.validateProduct(product);
 
-            //validateBusinessRules(product);
+            validateBusinessRules(product);
 
             Product created = produtoRepository.create(product);
 
@@ -116,5 +116,8 @@ public class ProductService {
         return ensureExists(id);
     }
 
-
+    private void validateBusinessRules(Product product) {
+        if(product.getQuantity() < 0) throw new ProductException("Quantidade não pode ser negotiva");
+        if(product.getUnitValue().compareTo(BigDecimal.ZERO) < 0) throw new ProductException("Valor não pode ser negativo");
+    }
 }
