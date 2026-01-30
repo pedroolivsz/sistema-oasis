@@ -93,17 +93,32 @@ public class ProductService {
     }
 
     public Product update(int id, String nome, int quantidade, BigDecimal valorUnitario) {
-        logger.info("Atualizando produto ID: {}", id);
+        logger.info("Iniciando atualização do produto ID: {}", id);
 
-        ensureExists(id);
-        Product product = new Product(id, nome, quantidade, valorUnitario);
+        try {
+            Product existing = ensureExists(id);
+            logger.debug("Produto encontrado para atualização: {}", existing.getId());
 
-        ProductValidator.validateProduct(product);
+            Product product = new Product(id, nome, quantidade, valorUnitario);
+            ProductValidator.validateProduct(product);
+            validateBusinessRules(product);
 
-        Product updated = produtoRepository.update(product);
-        logger.info("Produto atualizado com sucesso. ID: {}", updated.getId());
+            Product updated = produtoRepository.update(product);
 
-        return updated;
+            logger.info("Produto atualizado com sucesso. ID: {}, Antigo: '{}', Novo: '{}'",
+                    updated.getId(), existing.getName(), updated.getName());
+
+            return updated;
+        } catch (ProductException | IllegalArgumentException e) {
+            logger.error("Erro de validação ao atualizar produto ID {}: {}", id, e.getMessage());
+            throw e;
+        } catch (RepositoryException e) {
+            logger.error("Erro ao atualizar produto ID {} no banco de dados", id, e);
+            throw new ServiceException("Erro ao atualizar produto", e);
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao atualizar produto ID {}", id, e);
+            throw new ServiceException("Erro inesperado ao atualizar produto", e);
+        }
     }
 
     public void delete(int id) {
