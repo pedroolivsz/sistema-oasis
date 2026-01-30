@@ -72,6 +72,26 @@ public class ProductService {
         }
     }
 
+    public Product createWithTransaction(String name, int quantity, BigDecimal unitValue) {
+        logger.info("Iniciando criação de produto (transação): nome='{}', quantidade={}, valor={}", name, quantity, unitValue);
+
+        try {
+            Product product = new Product(name, quantity, unitValue);
+            ProductValidator.validateProduct(product);
+
+            validateBusinessRules(product);
+
+            Product created = produtoRepository.createWithTransaction(product);
+
+            logger.info("Produto criado com sucesso. ID: {}, nome: '{}'", created.getId(), created.getName());
+
+            return created;
+        } catch (Exception e) {
+            logger.error("Erro ao criar produto com transação", e);
+            throw new ServiceException("Erro ao criar produto com transação", e);
+        }
+    }
+
     public Product update(int id, String nome, int quantidade, BigDecimal valorUnitario) {
         logger.info("Atualizando produto ID: {}", id);
 
