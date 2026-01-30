@@ -180,7 +180,7 @@ public class ProductService {
 
         try {
             return ensureExists(id);
-        } catch (RepositoryException e) {
+        } catch (RepositoryException | ProductException e) {
             logger.error("Erro ao buscar produto ID {}", id, e);
             throw new ServiceException("Erro ao buscar produto", e);
         }
