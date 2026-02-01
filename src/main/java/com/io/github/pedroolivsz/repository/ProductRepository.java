@@ -64,7 +64,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação
      * @throws IllegalArgumentException se o produto for null ou inválido
      */
-
     public Product create(Product product) {
         validateProduct(product);
         try(Connection conn = Database.connect();
@@ -96,7 +95,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação
      * @throws IllegalArgumentException se o produto for null ou inválido
      */
-
     public Product createWithTransaction(Product product) {
         validateProduct(product);
 
@@ -135,7 +133,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação
      * @throws IllegalArgumentException se o produto for null ou inválido ou se o id não existir
      */
-
     public Product update(Product product) {
         validateProduct(product);
         validateId(product.getId());
@@ -171,7 +168,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação
      * @throws IllegalArgumentException se não houver atualizações ou o ID for inválido
      */
-
     public Product partialUpdate(int id, Map<String, Object> updates) {
         if(updates == null || updates.isEmpty()) throw new IllegalArgumentException("Nenhuma atualizaçao fornecida");
 
@@ -218,7 +214,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação ou se o produto não existir
      * @throws IllegalArgumentException se o ID do produto for inválido
      */
-
     public void delete(int id) {
         validateId(id);
 
@@ -243,7 +238,6 @@ public class ProductRepository {
      * @return lista com todos os produtos
      * @throws RepositoryException se houver um erro na operação
      */
-
     public List<Product> listAll() {
         List<Product> products = new ArrayList<>();
 
@@ -272,7 +266,6 @@ public class ProductRepository {
      * @throws RepositoryException se houver erro na operação
      * @throws IllegalArgumentException se o ID for inválido
      */
-
     public Optional<Product> findById(int id) {
         validateId(id);
 
@@ -306,7 +299,6 @@ public class ProductRepository {
      * @param product o produto contendo os parâmetros
      * @throws SQLException se houver erro na operação
      */
-
     private void setProductParameters(PreparedStatement preparedStatement, Product product) throws SQLException {
         preparedStatement.setInt(1, product.getQuantity());
         preparedStatement.setString(2, product.getName());
@@ -319,7 +311,6 @@ public class ProductRepository {
      * @param product o produto a ser validado
      * @throws IllegalArgumentException se algum campo do produto for inválido
      */
-
     private void validateProduct(Product product) {
         if(product == null) throw new IllegalArgumentException("Produto não pode ser nulo");
         if(product.getName() == null || product.getName().trim().isEmpty()) throw new IllegalArgumentException("Nome do produto não pode ser nulo ou vazio");
@@ -333,7 +324,6 @@ public class ProductRepository {
      * @param id o ID a ser validado
      * @throws IllegalArgumentException se o ID for inválido
      */
-
     private void validateId(int id) {
         if(id < 0) throw new IllegalArgumentException("ID deve ser maior que zero");
     }
@@ -343,7 +333,6 @@ public class ProductRepository {
      *
      * @param conn conexão passada por parâmetro
      */
-
     private void rollback(Connection conn) {
         if(conn != null) {
             try {
@@ -360,7 +349,6 @@ public class ProductRepository {
      *
      * @param conn conexão passada por parâmetro
      */
-
     private void closeConnection(Connection conn) {
         if(conn != null) {
             try {
