@@ -36,7 +36,6 @@ public class ProductService {
 
     //Mensagens de erros padronizadas
     private static final String ERROR_PRODUCT_NOT_FOUND = "Produto com ID %d não encontrado";
-    private static final String ERROR_DUPLICATE_NAME = "Já existe um produto com o nome '%s'";
     private static final String ERROR_INSUFFICIENT_STOCK = "Estoque insuficiente. Disponivel: %d, solicitado: %d";
     private static final String ERROR_INVALID_QUANTITY = "Quantidade deve ser maior que zero";
     private static final String ERROR_INVALID_PRICE = "Preço deve ser maior que zero";
@@ -388,8 +387,9 @@ public class ProductService {
 
         return productRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.warn("Produto não encontrado com ID: {}", id);
-                    return new ProductException("Produto com ID: " + id + " não existe");
+                    String error = String.format(ERROR_PRODUCT_NOT_FOUND, id);
+                    logger.warn(error);
+                    return new ProductException(error);
                 });
     }
 
